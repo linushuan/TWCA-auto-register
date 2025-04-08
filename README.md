@@ -8,6 +8,7 @@ Wait for next test.
 - birth-year-month-day
 - email
 - choose events
+### other
 - report errors (but I don't know what it means)
 - report run time
 - decide start time
