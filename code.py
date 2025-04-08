@@ -222,7 +222,7 @@ print(f"\nNavigating to {TARGET_URL}")
 driver.get(TARGET_URL)
 
 if not manyinput("Do you want to start now[Y/n]?") :
-    start_time=input("Type the time you want to start(in 24-hour system,like xx:xx): ")
+    start_time=input("Type the time you want to start(in 24-hour system, like xx:xx): ")
     for i in range(len(start_time)):
         if start_time[i] == ":" :
             target_hour=int(start_time[:i])
