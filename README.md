@@ -1,7 +1,7 @@
 # TWCA-auto-register
 ## auto register TWCA competition
-version 1.0-Beta
-Wait for 4/8 20:00 test.
+version 1.1-Beta
+Wait for next test.
 ## function
 ### input
 - wcaid
@@ -18,3 +18,6 @@ Wait for 4/8 20:00 test.
 - choose T-short size
 - enter phone number
 - all event id check
+
+## tests
+ - 4/8 20:00 2025ZhongshanOpen, fail with wcainput feild id change.
