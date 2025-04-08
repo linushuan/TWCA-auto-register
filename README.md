@@ -9,12 +9,12 @@ Wait for next test.
 - email
 - choose events
 - report errors (but I don't know what it means)
-- report time
+- report run time
+- decide start time
+- auto stop
 
 ## feature
-- decide time
 - get element id more quickly
-- auto stop
 - choose T-short size
 - enter phone number
 - all event id check
