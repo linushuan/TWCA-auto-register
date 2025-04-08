@@ -43,8 +43,6 @@ wcaid_action = True
 
 # --- time and links ---
 TARGET_URL = ""
-TARGET_URL = "file:///home/linuk/linus/WCA_register/TWCA_register_by_using_python/test/TWCA/registration.html"
-# TARGET_URL = "https://cubing-tw.net/event/2025ZhongshanOpen/registration"
 target_hour = 0
 target_minute = 00
 start_time=time.time()
@@ -186,7 +184,7 @@ Never gonna give never gonna give
 Never gonna give never gonna give\n""")
 
 # --- Main Script ---
-# TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
+TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
 
 tk.Label(root, text="Datas", font=('Arial', 15, 'bold')).pack(pady=10)
 for key in user_info:
