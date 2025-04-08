@@ -39,9 +39,12 @@ SHORT_PAUSE = 0.35  # Seconds (equiv. to 500ms in JS)
 MEDIUM_PAUSE = 1.0 # Seconds (used before clicking Go Button)
 LONGER_PAUSE = 3.5 # Seconds (equiv. to 4000ms in JS before Preview)
 action_taken = False # Flag similar to 'reload' variable in JS
+wcaid_action = True
 
 # --- time and links ---
 TARGET_URL = ""
+TARGET_URL = "file:///home/linuk/linus/WCA_register/TWCA_register_by_using_python/test/TWCA/registration.html"
+# TARGET_URL = "https://cubing-tw.net/event/2025ZhongshanOpen/registration"
 target_hour = 0
 target_minute = 00
 start_time=time.time()
@@ -166,7 +169,7 @@ def submit():
             print(k)
     root.destroy()
 
-# --- rickroll --- :)
+# --- rickroll ---
 print("""Never gonna give you up 
 Never gonna let you down
 Never gonna run around and desert you
@@ -183,7 +186,7 @@ Never gonna give never gonna give
 Never gonna give never gonna give\n""")
 
 # --- Main Script ---
-TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
+# TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
 
 tk.Label(root, text="Datas", font=('Arial', 15, 'bold')).pack(pady=10)
 for key in user_info:
@@ -275,17 +278,24 @@ try:
             try:
                 WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.ID, 'WCAID_input_MD2fg5')))
                 print("Found WCA ID input field.")
-                action_taken = True # Mark action as potentially taken
-                time.sleep(SHORT_PAUSE) # Mimic first 500ms timeout
-                if not safe_click(driver, (By.ID, 'WCAID_input_MD2fg5')): action_taken = False
-                if action_taken and not safe_send_keys(driver, (By.ID, 'WCAID_input_MD2fg5'), WCA_ID_TO_USE): action_taken = False
-                if action_taken:
-                    time.sleep(1.5) # Mimic second 1500ms timeout
+                wcaid_action = True # Mark action as potentially taken
+                time.sleep(SHORT_PAUSE) # Mimic first 350ms timeout
+                if not safe_click(driver, (By.ID, 'WCAID_input_MD2fg5')):
+                    print("Click 'WCAID_input_MD2fg5' failed.")
+                    wcaid_action = False
+                if wcaid_action and not safe_send_keys(driver, (By.ID, 'WCAID_input_MD2fg5'), WCA_ID_TO_USE):
+                    print("Input WCAID to 'WCAID_input_MD2fg5' failed.")
+                    wcaid_action = False
+                if wcaid_action:
+                    print("Waiting for WCAID checking...")
+                    WebDriverWait(driver, 5).until(lambda d: "is-valid" in d.find_element(By.ID, "WCAID_input_MD2fg5").get_attribute("class"))
                     if not safe_click(driver, (By.ID, 'WCAID_Button')):
-                        action_taken = False
                         print("Failed to click WCAID_Button.")
-                    else: print("WCA ID submitted successfully.")
-                else: print("WCA ID section interaction failed.")
+                        # action_taken = False
+                    else:
+                        print("WCA ID submitted successfully.")
+                else: 
+                    print("WCA ID section interaction failed.")
             
             # --- debuger ---
             # except (NoSuchElementException, TimeoutException):
