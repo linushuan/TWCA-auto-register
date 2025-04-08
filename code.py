@@ -166,7 +166,7 @@ def submit():
             print(k)
     root.destroy()
 
-# --- rickroll ---
+# --- rickroll --- :)
 print("""Never gonna give you up 
 Never gonna let you down
 Never gonna run around and desert you
