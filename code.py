@@ -222,8 +222,12 @@ print(f"\nNavigating to {TARGET_URL}")
 driver.get(TARGET_URL)
 
 if not manyinput("Do you want to start now[Y/n]?") :
-    target_hour = int(input("Type the **hour** you want to start(in 24-hour system,0~23): "))
-    target_minute = int(input("Type the **minute** you want to start(0~59): "))
+    start_time=input("Type the time you want to start(in 24-hour system,like xx:xx): ")
+    for i in range(len(start_time)):
+        if start_time[i] == ":" :
+            target_hour=int(start_time[:i])
+            target_minute=int(start_time[i+1:])
+            break
     wait_until_target()
     print("Code start!")
 else:
