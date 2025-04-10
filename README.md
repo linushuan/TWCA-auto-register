@@ -16,7 +16,7 @@ Wait for next test.
 
 ## feature
 - get element id more quickly
-- choose T-short size
+- choose T-shirt size
 - enter phone number
 - all event id check
 
