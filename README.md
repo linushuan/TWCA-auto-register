@@ -1,6 +1,6 @@
 # TWCA-auto-register
 ## auto register TWCA competition
-version 1.1-Beta
+version 0.3-Beta
 Wait for next test.
 ## function
 ### input
@@ -22,3 +22,4 @@ Wait for next test.
 
 ## tests
  - 4/8 20:00 2025ZhongshanOpen, fail with wcainput feild id change.
+ - 4/15 20:00 2025ZhongshanOpen-second, fail with wcainput feild id keep changing.
