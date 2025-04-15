@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementClickInterceptedException, ElementNotInteractableException
 import tkinter as tk
 from datetime import datetime
 
@@ -14,6 +13,7 @@ BIRTH_MONTH = ""
 BIRTH_DAY = ""
 EMAIL_ADDRESS = ""
 EVENT_ID_TO_CLICK = ""
+start_time=""
 user_info = {
     "WCAID":"",
     "birthyear":"",
@@ -35,27 +35,27 @@ event_to_click = {
     'skewb':False,'sq1':False,'4bld':False,'5bld':False,'mbld':False
 }
 WAIT_TIMEOUT = 0.1
-SHORT_PAUSE = 0.35  # Seconds (equiv. to 500ms in JS)
-MEDIUM_PAUSE = 1.0 # Seconds (used before clicking Go Button)
-LONGER_PAUSE = 3.5 # Seconds (equiv. to 4000ms in JS before Preview)
-action_taken = False # Flag similar to 'reload' variable in JS
+SHORT_PAUSE = 0.35  # Seconds
+LONGER_PAUSE = 3.5 # Seconds
+action_taken = False
 wcaid_action = True
+send_register = False
 
 # --- time and links ---
 TARGET_URL = ""
 target_hour = 0
-target_minute = 00
-start_time=time.time()
+target_minute = 0
+starttime=time.time()
 
 # --- tk's element ---
 root = tk.Tk()
-root.title("imformations")
+root.title("informations")
 labels = {}
 entries = {}
 
 # --- many time asking [Y/n] ---
 def manyinput(question):
-    ans=""
+    ans=input(question)
     while ans != "Y" and ans!= "y" and ans != "N" and ans != "n":
         print("Please answer again.")
         ans=input(question)
@@ -167,6 +167,29 @@ def submit():
             print(k)
     root.destroy()
 
+def input_user_data():
+    tk.Label(root, text="Datas", font=('Arial', 15, 'bold')).pack(pady=10)
+    for key in user_info:
+        frame = tk.Frame(root)
+        frame.pack(pady=5)
+        tk.Label(frame, text=key + ":", width=12, anchor='w').pack(side=tk.LEFT)
+        entry = tk.Entry(frame, width=25)
+        entry.pack(side=tk.LEFT)
+        entries[key] = entry
+    tk.Label(root, text="Events", font=('Arial', 15, 'bold')).pack(pady=15)
+    task_frame = tk.Frame(root)
+    task_frame.pack()
+    for idx, item in enumerate(event_to_click):
+        frame = tk.Frame(task_frame)
+        frame.pack(pady=3)
+        label = tk.Label(frame, text=f"{item}: False", font=('Arial', 12),fg="red")
+        label.pack(side=tk.LEFT)
+        labels[item] = label
+        btn = tk.Button(frame, text="button", command=lambda i=item: toggle_item(i))
+        btn.pack(side=tk.LEFT, padx=5)
+    tk.Button(root, text="submit", command=submit, bg='lightblue').pack(pady=20)
+    root.mainloop()
+
 # --- rickroll ---
 print("""Never gonna give you up 
 Never gonna let you down
@@ -185,29 +208,7 @@ Never gonna give never gonna give\n""")
 
 # --- Main Script ---
 TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
-
-tk.Label(root, text="Datas", font=('Arial', 15, 'bold')).pack(pady=10)
-for key in user_info:
-    frame = tk.Frame(root)
-    frame.pack(pady=5)
-    tk.Label(frame, text=key + ":", width=12, anchor='w').pack(side=tk.LEFT)
-    entry = tk.Entry(frame, width=25)
-    entry.pack(side=tk.LEFT)
-    entries[key] = entry
-tk.Label(root, text="Events", font=('Arial', 15, 'bold')).pack(pady=15)
-task_frame = tk.Frame(root)
-task_frame.pack()
-for idx, item in enumerate(event_to_click):
-    frame = tk.Frame(task_frame)
-    frame.pack(pady=3)
-    label = tk.Label(frame, text=f"{item}: False", font=('Arial', 12),fg="red")
-    label.pack(side=tk.LEFT)
-    labels[item] = label
-    btn = tk.Button(frame, text="button", command=lambda i=item: toggle_item(i))
-    btn.pack(side=tk.LEFT, padx=5)
-tk.Button(root, text="submit", command=submit, bg='lightblue').pack(pady=20)
-root.mainloop()
-
+input_user_data()
 WCA_ID_TO_USE = user_info['WCAID']
 BIRTH_YEAR = user_info['birthyear']
 BIRTH_MONTH = user_info['birthmonth']
@@ -221,7 +222,7 @@ driver.implicitly_wait(2)
 print(f"\nNavigating to {TARGET_URL}")
 driver.get(TARGET_URL)
 
-if not manyinput("Do you want to start now[Y/n]?") :
+if not manyinput("Do you want to start now [Y/n]? [Y/n] ") :
     start_time=input("Type the time you want to start(in 24-hour system, like xx:xx): ")
     for i in range(len(start_time)):
         if start_time[i] == ":" :
@@ -229,9 +230,7 @@ if not manyinput("Do you want to start now[Y/n]?") :
             target_minute=int(start_time[i+1:])
             break
     wait_until_target()
-    print("Code start!")
-else:
-    print("Code start!")
+print("Code start!")
 
 # time.sleep(2)
 try:
@@ -252,7 +251,7 @@ try:
                     time.sleep(WAIT_TIMEOUT)
                     driver.refresh()
                     continue
-                start_time=time.time()
+                starttime=time.time()
                 go_buttons = driver.find_elements(By.CSS_SELECTOR, '.btn.btn-primary')
                 if go_buttons:
                     print("Found 'START' button.")
@@ -282,11 +281,8 @@ try:
                 print("Found WCA ID input field.")
                 wcaid_action = True # Mark action as potentially taken
                 time.sleep(SHORT_PAUSE) # Mimic first 350ms timeout
-                if not safe_click(driver, (By.ID, 'WCAID_input_MD2fg5')):
-                    print("Click 'WCAID_input_MD2fg5' failed.")
-                    wcaid_action = False
-                if wcaid_action and not safe_send_keys(driver, (By.ID, 'WCAID_input_MD2fg5'), WCA_ID_TO_USE):
-                    print("Input WCAID to 'WCAID_input_MD2fg5' failed.")
+                if not safe_send_keys(driver, (By.CSS_SELECTOR, 'input[type="text"]'), WCA_ID_TO_USE):
+                    print("Input WCAID to 'WCAID_input' failed.")
                     wcaid_action = False
                 if wcaid_action:
                     print("Waiting for WCAID checking...")
@@ -315,7 +311,7 @@ try:
             print("\nChecking for information fields and preview button...")
             try:
                 WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.ID, 'BTN_Preview')))
-                print("Fields and button Found. Proceeding with form fill.")
+                print("Fields and button Found.\nProceeding with form fill.")
                 # form_filled_successfully = True
                 print("Filling form...")
                 if not safe_select_value(driver, (By.ID, 'form_birthday_year'), BIRTH_YEAR):
@@ -344,13 +340,17 @@ try:
                 if safe_click(driver, (By.ID, 'BTN_Preview')):
                     print(f"Clicked Preview. Waiting {LONGER_PAUSE}s before clicking Send.")
                     time.sleep(LONGER_PAUSE) # Mimic 3500ms timeout
-                    if safe_click(driver, (By.ID, 'BTN_Send')):
-                        action_taken = True
-                        print("Clicked Send successfully. Registration likely submitted.")
-                        continue
-                    else:
-                        print("Failed to click Send button.")
+                    print(f"Now use: {time.time()-starttime}s.") #check time when stop send
+                    # --- stop send when next register---
+                    # if safe_click(driver, (By.ID, 'BTN_Send')):
+                    #     action_taken = True
+                    #     send_register = True
+                    #     print("Clicked Send successfully. Registration likely submitted.")
+                    #     continue
+                    # else:
+                    #     print("Failed to click Send button.")
                         # action_taken = False
+                    # --- stop send when next register---
                 else:
                     print("Failed to click Preview button.")
                     # action_taken = False
@@ -377,13 +377,19 @@ try:
             print("Page reloaded.")
 
 # --- debuger ---
-except Exception as e:
-    print(f"\nAn unexpected error occurred in the main script: {e}")
+# except Exception as e:
+#     print(f"\nAn unexpected error occurred in the main script: {e}")
 # --- debuger ---
 
+except:
+    pass
+
 finally:
-    print(f"\nAll finished successfully.\nTotal time: {time.time()-start_time}.")
-    input("""You can pay money for the contest now.
-          \nPress enter to stop the code.""")
+    if send_register :
+        print(f"\nAll finished successfully.\nTotal time: {time.time()-starttime}s.")
+        print("You can pay money for the contest now.")
+    else :
+        print(f"\nRegister failed.\nTotal time: {time.time()-starttime}s.")
+    input("\nPress Enter to stop the code.")
     print("Closing WebDriver...")
     driver.quit()
