@@ -341,16 +341,14 @@ try:
                     print(f"Clicked Preview. Waiting {LONGER_PAUSE}s before clicking Send.")
                     time.sleep(LONGER_PAUSE) # Mimic 3500ms timeout
                     print(f"Now use: {time.time()-starttime}s.") #check time when stop send
-                    # --- stop send when next register---
-                    # if safe_click(driver, (By.ID, 'BTN_Send')):
-                    #     action_taken = True
-                    #     send_register = True
-                    #     print("Clicked Send successfully. Registration likely submitted.")
-                    #     continue
-                    # else:
-                    #     print("Failed to click Send button.")
-                        # action_taken = False
-                    # --- stop send when next register---
+                    if safe_click(driver, (By.ID, 'BTN_Send')):
+                        action_taken = True
+                        send_register = True
+                        print("Clicked Send successfully. Registration likely submitted.")
+                        continue
+                    else:
+                        print("Failed to click Send button.")
+                        action_taken = False
                 else:
                     print("Failed to click Preview button.")
                     # action_taken = False
