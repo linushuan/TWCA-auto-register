@@ -72,23 +72,6 @@ def safe_click(driver, locator, timeout=WAIT_TIMEOUT):
         element.click()
         print(f"Clicked element: {locator}")
         return True
-    #--- debuger ---
-    # except TimeoutException:
-    #     print(f"Timeout waiting for element {locator} to be clickable.")
-    # except ElementClickInterceptedException:
-    #     print(f"Element {locator} click intercepted. Trying JavaScript click.")
-    #     try:
-    #         # Find element again without wait, as it must exist if intercepted
-    #         element = driver.find_element(*locator)
-    #         driver.execute_script("arguments[0].click();", element)
-    #         print(f"Clicked element using JavaScript: {locator}")
-    #         return True
-    #     except Exception as e_js:
-    #         print(f"JavaScript click also failed for {locator}: {e_js}")
-    # except Exception as e:
-    #     print(f"Error clicking element {locator}: {e}")
-    #--- debuger ---
-
     except:
         pass
     return False
@@ -101,12 +84,6 @@ def safe_send_keys(driver, locator, value, timeout=WAIT_TIMEOUT):
         element.send_keys(value)
         print(f"Sent keys '{value}' to element: {locator}")
         return True
-    #--- debuger ---
-    # except TimeoutException:
-    #     print(f"Timeout waiting for element {locator} to be visible.")
-    # except Exception as e:
-    #     print(f"Error sending keys to element {locator}: {e}")
-    #--- debuger ---
     except:
         pass
     return False
@@ -119,17 +96,6 @@ def safe_select_value(driver, locator, value, timeout=WAIT_TIMEOUT):
         select_obj.select_by_value(value)
         print(f"Selected value '{value}' in dropdown: {locator}")
         return True
-    #--- debuger ---
-    # except TimeoutException:
-    #     print(f"Timeout waiting for dropdown element {locator} to be present.")
-    # except NoSuchElementException:
-    #     # This can happen if the specific *value* doesn't exist in the options
-    #     print(f"Could not find option with value '{value}' in dropdown {locator}.")
-    # except ElementNotInteractableException:
-    #      print(f"Dropdown {locator} found but is not interactable.")
-    # except Exception as e:
-    #     print(f"Error selecting value in dropdown {locator}: {e}")
-    #--- debuger ---
     except:
         pass
     return False
@@ -239,9 +205,6 @@ try:
         action_taken = False
 
         # --- Block 1: Check for 'GO' button ---
-        # JS uses getElementsByClassName, which returns a list. It incorrectly tries
-        # to click the list. We'll find elements and click the first one if it exists.
-        # Using CSS Selector for '.btn.btn-primary' is more robust.
         if driver.current_url == TARGET_URL:
             print("\nChecking for 'START' button...")
             try:
@@ -263,21 +226,14 @@ try:
                         print("Failed to click 'START' button.")
                 else:
                     print("'START' button not found.")
-        
-            # --- debuger ---
-            # except Exception as e:
-            #     # Catch broad exceptions since find_elements itself shouldn't raise NoSuchElement
-            #     print(f"An error occurred while checking/clicking the 'GO' button: {e}")
-            # --- debuger ---
             except:
                 pass
         
         # --- Block 2: Check for WCA ID Input ---
-        # Only proceed if the previous action wasn't taken
         if 'select' in driver.current_url:
             print("\nChecking for WCA ID input section...")
             try:
-                WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.ID, 'WCAID_input_MD2fg5')))
+                WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="text"]')))
                 print("Found WCA ID input field.")
                 wcaid_action = True # Mark action as potentially taken
                 time.sleep(SHORT_PAUSE) # Mimic first 350ms timeout
@@ -286,7 +242,7 @@ try:
                     wcaid_action = False
                 if wcaid_action:
                     print("Waiting for WCAID checking...")
-                    WebDriverWait(driver, 5).until(lambda d: "is-valid" in d.find_element(By.ID, "WCAID_input_MD2fg5").get_attribute("class"))
+                    WebDriverWait(driver, 5).until(lambda d: "is-valid" in d.find_element(By.CSS_SELECTOR, 'input[type="text"]').get_attribute("class"))
                     if not safe_click(driver, (By.ID, 'WCAID_Button')):
                         print("Failed to click WCAID_Button.")
                         # action_taken = False
@@ -294,15 +250,6 @@ try:
                         print("WCA ID submitted successfully.")
                 else: 
                     print("WCA ID section interaction failed.")
-            
-            # --- debuger ---
-            # except (NoSuchElementException, TimeoutException):
-            #     print("WCA ID input section not found or timed out.")
-            #     action_taken = False # Ensure flag is false if elements not found
-            # except Exception as e:
-            #     print(f"An error occurred during WCA ID processing: {e}")
-            #     action_taken = False
-            # --- debuger ---
             except:
                 pass
 
@@ -340,7 +287,6 @@ try:
                 if safe_click(driver, (By.ID, 'BTN_Preview')):
                     print(f"Clicked Preview. Waiting {LONGER_PAUSE}s before clicking Send.")
                     time.sleep(LONGER_PAUSE) # Mimic 3500ms timeout
-                    print(f"Now use: {time.time()-starttime}s.") #check time when stop send
                     if safe_click(driver, (By.ID, 'BTN_Send')):
                         action_taken = True
                         send_register = True
@@ -373,11 +319,6 @@ try:
             time.sleep(WAIT_TIMEOUT)
             driver.refresh()
             print("Page reloaded.")
-
-# --- debuger ---
-# except Exception as e:
-#     print(f"\nAn unexpected error occurred in the main script: {e}")
-# --- debuger ---
 
 except:
     pass
