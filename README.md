@@ -2,6 +2,17 @@
 ## auto register TWCA competition
 version 1.0
 Wait for next test.
+## setup
+### python
+### need to install
+- time
+- tkinter
+- selenium
+How to install these?
+Ask chatGPT or other AI. :)
+### driver
+You need a chromedriver.
+If you have any problems, ask chatGPT or other AI. :)
 ## feature
 ### input
 - wcaid
@@ -13,13 +24,13 @@ Wait for next test.
 - report run time
 - decide start time
 - auto stop
+- auto switch to 10% size
 
 ## future
 - get element id more quickly
 - choose T-shirt size
 - enter phone number
 - all event id check
-- change to use beautifulsoup
 
 ## issues
 - get element id too slow.
