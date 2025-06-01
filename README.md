@@ -1,6 +1,6 @@
 # TWCA-auto-register
 ## auto register TWCA competition
-version 1.0 <br></br>
+version 1.2 <br></br>
 Wait for next test.
 ## setup
 ### python
