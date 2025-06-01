@@ -4,14 +4,15 @@ version 1.2 <br></br>
 Wait for next test.
 ## setup
 ### python
+ maybe python3.12 or higher version.
 ### need to install
 - time
 - tkinter
 - selenium
-How to install these?
-Ask chatGPT or other AI. :)
+ How to install these?
+ Ask chatGPT or other AI. :)
 ### driver
-You need a chromedriver.
+ You need a chromedriver.
 If you have any problems, ask chatGPT or other AI. :)
 ## feature
 ### input
