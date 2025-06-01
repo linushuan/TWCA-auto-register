@@ -46,6 +46,7 @@ TARGET_URL = ""
 target_hour = 0
 target_minute = 0
 starttime=time.time()
+starttime_2=time.time()
 
 # --- tk's element ---
 root = tk.Tk()
@@ -218,6 +219,7 @@ try:
                 go_buttons = driver.find_elements(By.CSS_SELECTOR, '.btn.btn-primary')
                 if go_buttons:
                     print("Found 'START' button.")
+                    starttime_2=time.time()
                     if safe_click(driver, (By.CSS_SELECTOR, '.btn.btn-primary'), timeout=WAIT_TIMEOUT):
                         action_taken = True
                         print("'START' button clicked successfully.")
@@ -302,14 +304,6 @@ try:
             #     print("Failed to fill one or more form fields or click event.")
             #     action_taken = False
             
-            # --- debuger ---
-            # except (NoSuchElementException, TimeoutException):
-            #     print("Preview button / main form section not found or timed out.")
-            #     action_taken = False
-            # except Exception as e:
-            #     print(f"An error occurred during form filling/preview/send: {e}")
-            #     action_taken = False
-            # --- debuger ---
             except:
                 pass
         
@@ -325,10 +319,10 @@ except:
 
 finally:
     if send_register :
-        print(f"\nAll finished successfully.\nTotal time: {time.time()-starttime}s.")
+        print(f"\nAll finished successfully.\nTotal time: {time.time()-starttime}s.\nRegister time: {time.time()-starttime_2}s.")
         print("You can pay money for the contest now.")
     else :
-        print(f"\nRegister failed.\nTotal time: {time.time()-starttime}s.")
+        print(f"\nRegister failed.\nTotal time: {time.time()-starttime}s.\nRegister time: {time.time()-starttime_2}s.")
     input("\nPress Enter to stop the code.")
     print("Closing WebDriver...")
     driver.quit()
