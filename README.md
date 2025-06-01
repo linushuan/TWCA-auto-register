@@ -26,6 +26,7 @@ Wait for next test.
 - decide start time
 - auto stop
 - auto switch to 10% size
+- avg speed: 9-13s
 
 ## future
 - get element id more quickly
