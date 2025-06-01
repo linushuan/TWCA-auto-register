@@ -36,7 +36,8 @@ event_to_click = {
 }
 WAIT_TIMEOUT = 0.1
 SHORT_PAUSE = 0.35  # Seconds
-LONGER_PAUSE = 3.5 # Seconds
+LONGER_PAUSE = 5.0 # Seconds
+mag=10 #webpage size(%)
 action_taken = False
 wcaid_action = True
 send_register = False
@@ -47,6 +48,26 @@ target_hour = 0
 target_minute = 0
 starttime=time.time()
 starttime_2=time.time()
+
+# --- rickroll ---
+print("""Never gonna give you up 
+Never gonna let you down
+Never gonna run around and desert you
+Never gonna make you cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt you
+Never gonna give you up 
+Never gonna let you down
+Never gonna run around and desert you
+Never gonna make you cry
+Never gonna say goodbye
+Never gonna tell a lie and hurt you
+Never gonna give never gonna give
+Never gonna give never gonna give\n""")
+
+# --- Main Script-1 ---
+TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
+# --- Main Script-1 ---
 
 # --- tk's element ---
 root = tk.Tk()
@@ -157,24 +178,7 @@ def input_user_data():
     tk.Button(root, text="submit", command=submit, bg='lightblue').pack(pady=20)
     root.mainloop()
 
-# --- rickroll ---
-print("""Never gonna give you up 
-Never gonna let you down
-Never gonna run around and desert you
-Never gonna make you cry
-Never gonna say goodbye
-Never gonna tell a lie and hurt you
-Never gonna give you up 
-Never gonna let you down
-Never gonna run around and desert you
-Never gonna make you cry
-Never gonna say goodbye
-Never gonna tell a lie and hurt you
-Never gonna give never gonna give
-Never gonna give never gonna give\n""")
-
-# --- Main Script ---
-TARGET_URL = input("The register page(like https://cubing-tw.net/event/xxxx/registration):\n")
+# --- Main Script-2 ---
 input_user_data()
 WCA_ID_TO_USE = user_info['WCAID']
 BIRTH_YEAR = user_info['birthyear']
@@ -188,6 +192,7 @@ driver = webdriver.Chrome(options=options)
 driver.implicitly_wait(2)
 print(f"\nNavigating to {TARGET_URL}")
 driver.get(TARGET_URL)
+driver.execute_script(f"document.body.style.zoom='{mag}%'")
 
 if not manyinput("Do you want to start now [Y/n]? [Y/n] ") :
     start_time=input("Type the time you want to start(in 24-hour system, like xx:xx): ")
@@ -207,6 +212,7 @@ try:
 
         # --- Block 1: Check for 'GO' button ---
         if driver.current_url == TARGET_URL:
+            driver.execute_script(f"document.body.style.zoom='{mag}%'")
             print("\nChecking for 'START' button...")
             try:
                 notyet = driver.find_elements(By.CSS_SELECTOR, '.btn.btn-secondary.disabled')
@@ -214,6 +220,7 @@ try:
                     print("Register not start. The page will refresh.")
                     time.sleep(WAIT_TIMEOUT)
                     driver.refresh()
+                    driver.execute_script(f"document.body.style.zoom='{mag}%'")
                     continue
                 starttime=time.time()
                 go_buttons = driver.find_elements(By.CSS_SELECTOR, '.btn.btn-primary')
@@ -233,6 +240,7 @@ try:
         
         # --- Block 2: Check for WCA ID Input ---
         if 'select' in driver.current_url:
+            driver.execute_script(f"document.body.style.zoom='{mag}%'")
             print("\nChecking for WCA ID input section...")
             try:
                 WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="text"]')))
@@ -257,6 +265,7 @@ try:
 
         # --- Block 3: Check for Preview Button (Main Form) ---
         if 'form' in driver.current_url:
+            driver.execute_script(f"document.body.style.zoom='{mag}%'")
             print("\nChecking for information fields and preview button...")
             try:
                 WebDriverWait(driver, WAIT_TIMEOUT).until(EC.presence_of_element_located((By.ID, 'BTN_Preview')))
@@ -288,7 +297,7 @@ try:
                 time.sleep(SHORT_PAUSE) # Mimic 350ms timeout
                 if safe_click(driver, (By.ID, 'BTN_Preview')):
                     print(f"Clicked Preview. Waiting {LONGER_PAUSE}s before clicking Send.")
-                    time.sleep(LONGER_PAUSE) # Mimic 3500ms timeout
+                    time.sleep(LONGER_PAUSE) # Mimic 5000ms timeout
                     if safe_click(driver, (By.ID, 'BTN_Send')):
                         action_taken = True
                         send_register = True
@@ -312,6 +321,7 @@ try:
             print(f"\nNo specific actions were successfully completed. Reloading page in {WAIT_TIMEOUT}s...")
             time.sleep(WAIT_TIMEOUT)
             driver.refresh()
+            driver.execute_script(f"document.body.style.zoom='{mag}%'")
             print("Page reloaded.")
 
 except:
