@@ -74,6 +74,7 @@ root = tk.Tk()
 root.title("informations")
 labels = {}
 entries = {}
+max_cols = 3
 
 # --- many time asking [Y/n] ---
 def manyinput(question):
@@ -168,15 +169,18 @@ def input_user_data():
     task_frame = tk.Frame(root)
     task_frame.pack()
     for idx, item in enumerate(event_to_click):
-        frame = tk.Frame(task_frame)
-        frame.pack(pady=3)
-        label = tk.Label(frame, text=f"{item}: False", font=('Arial', 12),fg="red")
-        label.pack(side=tk.LEFT)
+        row = idx // max_cols
+        col = idx % max_cols
+        frame = tk.Frame(task_frame, padx=10, pady=5)
+        frame.grid(row=row, column=col)
+        label = tk.Label(frame, text=f"{item}: False", font=('Arial', 12), fg="red")
+        label.pack()
         labels[item] = label
-        btn = tk.Button(frame, text="button", command=lambda i=item: toggle_item(i))
-        btn.pack(side=tk.LEFT, padx=5)
+        btn = tk.Button(frame, text="switch", command=lambda i=item: toggle_item(i))
+        btn.pack()
     tk.Button(root, text="submit", command=submit, bg='lightblue').pack(pady=20)
     root.mainloop()
+
 
 # --- Main Script-2 ---
 input_user_data()
