@@ -27,15 +27,15 @@ Wait for next test.
 - auto stop
 - auto switch to 10% size
 - avg speed: 9-13s
+- choose cloth size
 
 ## future
-- get element id more quickly
-- choose T-shirt size
+- add the wrong get item speed.
 - enter phone number
 - all event id check
 
 ## issues
-- get element id too slow.
+- get element id too slow when get element id(or other can get the item) failed.
 - code will click or fill with the place you can see (It means if you don't want to touch it, you need to let all the regions of website in the windows)
 
 ## tests
@@ -44,3 +44,7 @@ Wait for next test.
  - 5/1 20:00 2025ChienKuoCubingParty, fail with laptop sleep.
  - 5/8 20:00 2025ChienKuoCubingParty-second, fail with unknow problem(start register botton didn't click.)
  - 5/31 21:30 2025TaipeiSummerBeQuiet, succeed.
+ - 6/12 20:00 2025MaruCubeDayTaiwan, failed with I forget submit(just preview).
+
+## How to use
+1. I will write it when I have time:) .
