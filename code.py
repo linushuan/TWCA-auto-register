@@ -344,7 +344,7 @@ try:
                             print(f"Click {EVENT_ID_TO_CLICK} failed.")
                             # form_filled_successfully = False
                 for k,b in cloth_size.items():
-                    if b:
+                    if k != "Default" and b:
                         if not safe_click(driver, (By.ID, cloth_size_id[k])):
                             print(f"Click cloth size {k} failed.")
                             # form_filled_successfully = False
