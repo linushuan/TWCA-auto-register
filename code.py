@@ -34,6 +34,18 @@ event_to_click = {
     '3bld':False,'3fmc':False,'3oh':False,'clock':False,'mega':False,'pyra':False,
     'skewb':False,'sq1':False,'4bld':False,'5bld':False,'mbld':False
 }
+cloth_size = {
+    "Default":False,
+    "XS":False,"S":False,"M":False,
+    "L":False,"XL":False,"2XL":False,
+    "3XL":False,"4XL":False,"5XL":False
+}
+cloth_size_id = {
+    "Default":"form_question_1_0",
+    "XS":"form_question_1_1","S":"form_question_1_2","M":"form_question_1_3",
+    "L":"form_question_1_4","XL":"form_question_1_5","2XL":"form_question_1_6",
+    "3XL":"form_question_1_7","4XL":"form_question_1_8","5XL":"form_question_1_9"
+}
 WAIT_TIMEOUT = 0.1
 SHORT_PAUSE = 0.35  # Seconds
 LONGER_PAUSE = 5.0 # Seconds
@@ -74,7 +86,10 @@ root = tk.Tk()
 root.title("informations")
 labels = {}
 entries = {}
-max_cols = 3
+cloth_var = tk.StringVar()
+cloth_var.set("Default")
+max_cols = 5
+cloth_labels = {}
 
 # --- many time asking [Y/n] ---
 def manyinput(question):
@@ -143,6 +158,17 @@ def toggle_item(item):
     else:
         labels[item].config(text=f"{item}: False",fg="red")
 
+# --- update cloth size ---
+def update_cloth_selection():
+    selected = cloth_var.get()
+    for size in cloth_size:
+        if size == selected:
+            cloth_size[size] = True
+            cloth_labels[size].config(fg="green")
+        else:
+            cloth_size[size] = False
+            cloth_labels[size].config(fg="black")
+
 # --- submit and close in tk ---
 def submit():
     for key in entries:
@@ -152,6 +178,10 @@ def submit():
         print(f"{key}: \"{value}\"")
     print("\nYour events\n")
     for k, v in event_to_click.items():
+        if v :
+            print(k)
+    print("\nYour cloth size\n")
+    for k,v in cloth_size.items():
         if v :
             print(k)
     root.destroy()
@@ -178,9 +208,27 @@ def input_user_data():
         labels[item] = label
         btn = tk.Button(frame, text="switch", command=lambda i=item: toggle_item(i))
         btn.pack()
+    tk.Label(root, text="Cloth Size", font=('Arial', 15, 'bold')).pack(pady=15)
+    cloth_frame = tk.Frame(root)
+    cloth_frame.pack()
+    size_list = list(cloth_size.keys())
+    for idx, size in enumerate(size_list):
+        row = idx // max_cols
+        col = idx % max_cols
+        frame = tk.Frame(cloth_frame)
+        frame.grid(row=row, column=col, padx=8, pady=5)
+        label = tk.Label(frame, text=size, font=('Arial', 12))
+        label.pack()
+        cloth_labels[size] = label
+        rb = tk.Radiobutton(
+            frame, variable=cloth_var, value=size,
+            command=update_cloth_selection,
+            indicatoron=True, font=('Arial', 14)
+        )
+        rb.pack()
+    update_cloth_selection()
     tk.Button(root, text="submit", command=submit, bg='lightblue').pack(pady=20)
     root.mainloop()
-
 
 # --- Main Script-2 ---
 input_user_data()
@@ -295,7 +343,11 @@ try:
                         if not safe_click(driver, (By.ID, EVENT_ID_TO_CLICK)): 
                             print(f"Click {EVENT_ID_TO_CLICK} failed.")
                             # form_filled_successfully = False
-
+                for k,b in cloth_size.items():
+                    if b:
+                        if not safe_click(driver, (By.ID, cloth_size_id[k])):
+                            print(f"Click cloth size {k} failed.")
+                            # form_filled_successfully = False
             # if form_filled_successfully: (this chunck miss a tab.
                 print(f"Form fields filled/clicked. Waiting {SHORT_PAUSE}s before clicking Preview.")
                 time.sleep(SHORT_PAUSE) # Mimic 350ms timeout
