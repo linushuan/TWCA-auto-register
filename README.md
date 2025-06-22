@@ -20,6 +20,7 @@ Wait for next test.
 - birth-year-month-day
 - email
 - choose events
+- cloth size
 ### other
 - report errors (but I don't know what it means) (I remove it now)
 - report run time
